@@ -53,23 +53,38 @@ class DashboardCubit extends Cubit<DashboardStates> {
     //   emit(DashboardDataErrorState(error: error.toString()));
     // });
   }
-  getCategories()
-  {
+
+  getCategories() {
     emit(DashboardCategoriesLoadingState());
     repository.getCategories().then((value) {
       print(jsonDecode(value.toString()));
       categoriesModel = CategoriesModel.fromJson(value.data);
-      if(categoriesModel.status)
+      if (categoriesModel.status)
         emit(DashboardCategoriesSuccessState());
       else
         emit(DashboardCategoriesErrorState(error: categoriesModel.message));
-
-
-    }).catchError((error){
+    }).catchError((error) {
       print(error.toString());
       emit(DashboardCategoriesErrorState(error: error.toString()));
     });
+  }
 
-
+  addOrRemoveFavorite(int productId){
+    repository.addOrRemoveFavorite(productId: productId).then((value) {
+      print(jsonDecode(value.toString()));
+      if (jsonDecode(value.data['status'])) {
+        emit(DashboardAddOrRemoveFavoriteSuccessState());
+      }
+      else
+        emit(DashboardAddOrRemoveFavoriteErrorState(
+            error: jsonDecode(value.data['message'])));
+    }).catchError((error) {
+      emit(DashboardAddOrRemoveFavoriteErrorState(error: error.toString()));
+    });
+  }
+  changeFavoriteLocal(int index )
+  {
+    homeDataModel.data.products[index].inFavorites =  !homeDataModel.data.products[index].inFavorites ;
+    emit(DashboardChangeFavoriteSuccessState());
   }
 }

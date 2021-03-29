@@ -33,7 +33,7 @@ class DashboardScreen extends StatelessWidget {
         return Scaffold(
           backgroundColor: kScaffoldColor,
           body: ConditionalBuilder(
-            builder: (ctx) => SingleChildScrollView(
+            fallback: (ctx) => SingleChildScrollView(
               child: SafeArea(
                 child: Column(
                   children: [
@@ -124,7 +124,7 @@ class DashboardScreen extends StatelessWidget {
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: getProportionateScreenWidth(20)),
-                          child:  Text(
+                          child: Text(
                             'Categories',
                             style: TextStyle(
                               fontSize: getProportionateScreenWidth(18),
@@ -173,7 +173,13 @@ class DashboardScreen extends StatelessWidget {
                                 (index) {
                                   return productCard(
                                       product:
-                                          homeDataModel.data.products[index]);
+                                          homeDataModel.data.products[index],
+                                      function: () {
+                                        DashboardCubit.get(context)
+                                            .addOrRemoveFavorite(homeDataModel
+                                                .data.products[index].id);
+                                        DashboardCubit.get(context).changeFavoriteLocal(index);
+                                      } , inFavorites: homeDataModel.data.products[index].inFavorites);
                                 },
                               ),
                               SizedBox(width: getProportionateScreenWidth(20)),
@@ -187,10 +193,10 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ),
             ),
-            fallback:(ctx)=> Center(child: CircularProgressIndicator()),
-            condition: state is DashboardDataSuccessState,
+            builder: (ctx) => Center(child: CircularProgressIndicator()),
+            condition: state is DashboardDataLoadingState ||
+                state is DashboardCategoriesLoadingState,
           ),
-
         );
       },
     );

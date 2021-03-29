@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:e_commerce/shared/commponents/constants.dart';
 import 'package:e_commerce/shared/network/errors.dart';
 import 'package:e_commerce/shared/network/remote/dio_helper.dart';
 import 'package:e_commerce/shared/network/remote/end_points.dart';
@@ -25,6 +26,9 @@ abstract class Repository {
   });
 
   Future<Response> getCategories();
+  Future<Response> addOrRemoveFavorite({
+    @required int productId,
+  });
 
 // Future<Either<String, UserModel>> userLogin({
 //   @required String email,
@@ -90,6 +94,14 @@ class RepoImplementation extends Repository {
   @override
   Future<Response> getCategories() async {
     return await dioHelper.getData(path: CATEGORIES_END_POINT);
+  }
+
+  @override
+  Future<Response> addOrRemoveFavorite({int productId})async {
+   return await dioHelper.postData(path: FAVORITE_END_POINT, data:
+   {
+     'product_id':productId,
+   } , token: userToken);
   }
 
 // @override

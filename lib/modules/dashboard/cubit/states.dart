@@ -14,3 +14,13 @@ class DashboardCategoriesErrorState extends DashboardStates {
 
   DashboardCategoriesErrorState({this.error});
 }
+class DashboardAddOrRemoveFavoriteSuccessState extends DashboardStates{}
+class DashboardAddOrRemoveFavoriteErrorState extends DashboardStates {
+  String error;
+
+  DashboardAddOrRemoveFavoriteErrorState({this.error});
+}
+class DashboardAssignFavoriteSuccessState extends DashboardStates{}
+class DashboardChangeFavoriteSuccessState extends DashboardStates{}
+
+

@@ -55,7 +55,7 @@ void navigateAndFinish({context, route}) => Navigator.pushAndRemoveUntil(
     ),
         (Route<dynamic> route) => false);
 
-Widget productCard({ product})=> Padding(
+Widget productCard({ product , function , bool inFavorites} )=> Padding(
   padding: EdgeInsets.only(left: getProportionateScreenWidth(20)),
   child: Container(
     width: getProportionateScreenWidth(140),
@@ -115,13 +115,13 @@ Widget productCard({ product})=> Padding(
                 ),
                 InkWell(
                   borderRadius: BorderRadius.circular(50),
-                  onTap: () {},
+                  onTap: function,
                   child: Container(
                     padding: EdgeInsets.all(getProportionateScreenWidth(8)),
                     height: getProportionateScreenWidth(28),
                     width: getProportionateScreenWidth(28),
                     decoration: BoxDecoration(
-                      color: product.inFavorites
+                      color: inFavorites
                           ? kPrimaryColor.withOpacity(0.15)
                           : kSecondaryColor.withOpacity(0.1),
                       shape: BoxShape.circle,
