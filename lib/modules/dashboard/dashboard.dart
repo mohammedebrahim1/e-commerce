@@ -66,7 +66,7 @@ class DashboardScreen extends StatelessWidget {
                             ),
                           ),
                           appBarIconButton(
-                            numOfItem: 0,
+                            numOfItem: DashboardCubit.get(context).cartProductsNumber >= 9 ? '+9' : DashboardCubit.get(context).cartProductsNumber.toString(),
                             icon: "assets/icons/Cart Icon.svg",
                           ),
                           appBarIconButton(
@@ -174,12 +174,24 @@ class DashboardScreen extends StatelessWidget {
                                   return productCard(
                                       product:
                                           homeDataModel.data.products[index],
-                                      function: () {
+                                      function_fav: () {
                                         DashboardCubit.get(context)
-                                            .addOrRemoveFavorite(homeDataModel
-                                                .data.products[index].id);
-                                        DashboardCubit.get(context).changeFavoriteLocal(index);
-                                      } , inFavorites: homeDataModel.data.products[index].inFavorites);
+                                            .addOrRemoveFavorite(
+                                                homeDataModel
+                                                    .data.products[index].id,
+                                                index);
+                                      },
+                                      inFavorites: homeDataModel
+                                          .data.products[index].inFavorites,
+                                      inCart: homeDataModel
+                                          .data.products[index].inCart,
+                                      function_cart: () {
+                                        DashboardCubit.get(context)
+                                            .addOrRemoveFromCart(
+                                                homeDataModel
+                                                    .data.products[index].id,
+                                                index);
+                                      });
                                 },
                               ),
                               SizedBox(width: getProportionateScreenWidth(20)),

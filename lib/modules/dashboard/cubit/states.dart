@@ -14,13 +14,20 @@ class DashboardCategoriesErrorState extends DashboardStates {
 
   DashboardCategoriesErrorState({this.error});
 }
+class DashboardAddOrRemoveFavoriteLoadingState extends DashboardStates{}
 class DashboardAddOrRemoveFavoriteSuccessState extends DashboardStates{}
 class DashboardAddOrRemoveFavoriteErrorState extends DashboardStates {
   String error;
 
   DashboardAddOrRemoveFavoriteErrorState({this.error});
 }
-class DashboardAssignFavoriteSuccessState extends DashboardStates{}
-class DashboardChangeFavoriteSuccessState extends DashboardStates{}
+class DashboardAddOrRemoveFromCartLoadingState extends DashboardStates{}
+class DashboardAddOrRemoveFromCartSuccessState extends DashboardStates{}
+class DashboardAddOrRemoveFromCartErrorState extends DashboardStates {
+  String error;
+
+  DashboardAddOrRemoveFromCartErrorState({this.error});
+}
+class DashboardChangeCartLocalState extends DashboardStates{}
 
 

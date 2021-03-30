@@ -26,7 +26,12 @@ abstract class Repository {
   });
 
   Future<Response> getCategories();
+
   Future<Response> addOrRemoveFavorite({
+    @required int productId,
+  });
+
+  Future<Response> addOrRemoveFromCart({
     @required int productId,
   });
 
@@ -97,11 +102,24 @@ class RepoImplementation extends Repository {
   }
 
   @override
-  Future<Response> addOrRemoveFavorite({int productId})async {
-   return await dioHelper.postData(path: FAVORITE_END_POINT, data:
-   {
-     'product_id':productId,
-   } , token: userToken);
+  Future<Response> addOrRemoveFavorite({int productId}) async {
+    return await dioHelper.postData(
+        path: FAVORITE_END_POINT,
+        data: {
+          'product_id': productId,
+        },
+        token: userToken);
+  }
+
+  @override
+  Future<Response> addOrRemoveFromCart({int productId}) async {
+    return await dioHelper.postData(
+      path: CART_END_POINT,
+      data: {
+        'product_id': productId,
+      },
+      token: userToken,
+    );
   }
 
 // @override

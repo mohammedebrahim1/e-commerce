@@ -55,7 +55,7 @@ void navigateAndFinish({context, route}) => Navigator.pushAndRemoveUntil(
     ),
         (Route<dynamic> route) => false);
 
-Widget productCard({ product , function , bool inFavorites} )=> Padding(
+Widget productCard({ product , function_fav , function_cart, bool inFavorites , bool inCart} )=> Padding(
   padding: EdgeInsets.only(left: getProportionateScreenWidth(20)),
   child: Container(
     width: getProportionateScreenWidth(140),
@@ -85,7 +85,7 @@ Widget productCard({ product , function , bool inFavorites} )=> Padding(
             ),
           ),
           Container(
-            height: getProportionateScreenHeight(50.0),
+            height: getProportionateScreenHeight(80.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,26 +113,52 @@ Widget productCard({ product , function , bool inFavorites} )=> Padding(
                     ),
                   ],
                 ),
-                InkWell(
-                  borderRadius: BorderRadius.circular(50),
-                  onTap: function,
-                  child: Container(
-                    padding: EdgeInsets.all(getProportionateScreenWidth(8)),
-                    height: getProportionateScreenWidth(28),
-                    width: getProportionateScreenWidth(28),
-                    decoration: BoxDecoration(
-                      color: inFavorites
-                          ? kPrimaryColor.withOpacity(0.15)
-                          : kSecondaryColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
+                Column(
+                  children: [
+                    InkWell(
+                      borderRadius: BorderRadius.circular(50),
+                      onTap: function_fav,
+                      child: Container(
+                        padding: EdgeInsets.all(getProportionateScreenWidth(8)),
+                        height: getProportionateScreenWidth(28),
+                        width: getProportionateScreenWidth(28),
+                        decoration: BoxDecoration(
+                          color: inFavorites
+                              ? kPrimaryColor.withOpacity(0.15)
+                              : kSecondaryColor.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/icons/Heart Icon_2.svg",
+                          color: inFavorites
+                              ? Color(0xFFFF4848)
+                              : Colors.grey[400],
+                        ),
+                      ),
                     ),
-                    child: SvgPicture.asset(
-                      "assets/icons/Heart Icon_2.svg",
-                      color: product.inFavorites
-                          ? Color(0xFFFF4848)
-                          : Color(0xFFDBDEE4),
+                    SizedBox(height: getProportionateScreenHeight(8.0),),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(50),
+                      onTap: function_cart,
+                      child: Container(
+                        padding: EdgeInsets.all(getProportionateScreenWidth(8)),
+                        height: getProportionateScreenWidth(28),
+                        width: getProportionateScreenWidth(28),
+                        decoration: BoxDecoration(
+                          color: inCart
+                              ? Colors.blue.withOpacity(0.15)
+                              : kSecondaryColor.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/icons/Cart Icon.svg",
+                          color: inCart
+                              ? Colors.blue
+                              : Colors.grey[500],
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),

@@ -15,7 +15,17 @@ class DashboardCubit extends Cubit<DashboardStates> {
   static DashboardCubit get(context) => BlocProvider.of(context);
   HomeDataModel homeDataModel;
   CategoriesModel categoriesModel;
+  int cartProductsNumber = 0;
 
+  void initCartNumber()
+  {
+    emit(DashboardDataLoadingState());
+    homeDataModel.data.products.forEach((element) {
+      if(element.inCart)
+        cartProductsNumber++;
+    });
+    emit(DashboardChangeCartLocalState());
+  }
   getHomeData() {
     emit(DashboardDataLoadingState());
     repository.getHomeData(token: userToken).then((value) {
@@ -23,6 +33,7 @@ class DashboardCubit extends Cubit<DashboardStates> {
       homeDataModel = HomeDataModel.fromJson(value.data);
       if (homeDataModel.status) {
         print(homeDataModel.data.banners[0].id);
+        initCartNumber();
         emit(DashboardDataSuccessState());
       } else {
         emit(DashboardDataErrorState(error: homeDataModel.message));
@@ -69,22 +80,56 @@ class DashboardCubit extends Cubit<DashboardStates> {
     });
   }
 
-  addOrRemoveFavorite(int productId){
+  addOrRemoveFavorite(int productId, int index) {
+    changeFavoriteLocal(index);
+    emit(DashboardAddOrRemoveFavoriteLoadingState());
     repository.addOrRemoveFavorite(productId: productId).then((value) {
       print(jsonDecode(value.toString()));
-      if (jsonDecode(value.data['status'])) {
-        emit(DashboardAddOrRemoveFavoriteSuccessState());
+      // print(value.data['status'].toString());
+      // print(jsonDecode(value.data['status']).toString());
+      if ((value.data['status']) == false) {
+        changeFavoriteLocal(index);
       }
-      else
-        emit(DashboardAddOrRemoveFavoriteErrorState(
-            error: jsonDecode(value.data['message'])));
+      emit(DashboardAddOrRemoveFavoriteSuccessState());
     }).catchError((error) {
+      changeFavoriteLocal(index);
+      print(error.toString());
       emit(DashboardAddOrRemoveFavoriteErrorState(error: error.toString()));
     });
   }
-  changeFavoriteLocal(int index )
-  {
-    homeDataModel.data.products[index].inFavorites =  !homeDataModel.data.products[index].inFavorites ;
-    emit(DashboardChangeFavoriteSuccessState());
+
+  changeFavoriteLocal(int index) {
+    homeDataModel.data.products[index].inFavorites =
+        !homeDataModel.data.products[index].inFavorites;
+  }
+  addOrRemoveFromCart(int productId, int index) {
+    changeCartLocal(index);
+    emit(DashboardAddOrRemoveFromCartLoadingState());
+    repository.addOrRemoveFromCart(productId: productId).then((value) {
+      print(jsonDecode(value.toString()));
+      // print(value.data['status'].toString());
+      // print(jsonDecode(value.data['status']).toString());
+      if ((value.data['status']) == false) {
+        changeCartLocal(index);
+      }
+      emit(DashboardAddOrRemoveFromCartSuccessState());
+    }).catchError((error) {
+      changeCartLocal(index);
+      print(error.toString());
+      emit(DashboardAddOrRemoveFromCartErrorState(error: error.toString()));
+    });
+  }
+
+  changeCartLocal(int index) {
+    homeDataModel.data.products[index].inCart =
+    !homeDataModel.data.products[index].inCart;
+    if( homeDataModel.data.products[index].inCart)
+    {
+      cartProductsNumber++;
+    } else
+    {
+      cartProductsNumber--;
+    }
+    emit(DashboardChangeCartLocalState());
   }
 }
